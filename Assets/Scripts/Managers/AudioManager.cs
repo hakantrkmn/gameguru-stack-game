@@ -18,25 +18,13 @@ public class AudioManager : MonoBehaviour
         EventManager.StackCubePlaced -= StackCubePlaced;
     }
 
-    private void StackCubePlaced(float percent)
+    private void StackCubePlaced(float percent,Transform stack)
     {
         audioSource.Play();
         if (percent>tolerance)
-        {
             audioSource.pitch += .1f;
-        }
         else
-        {
             audioSource.pitch = 1;
-        }
     }
-
-    private void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.A))
-        {
-           audioSource.Play();
-           audioSource.pitch += .1f;
-        }
-    }
+    
 }

@@ -8,7 +8,6 @@ using UnityEngine;
 public class ScriptableManager : MonoBehaviour
 {
     [SerializeField] GameData gameData;
-    [SerializeField] PlayerMovementSettings PlayerMovementSettings;
 
 
     //-------------------------------------------------------------------
@@ -17,7 +16,6 @@ public class ScriptableManager : MonoBehaviour
         SaveManager.LoadGameData(gameData);
 
         Scriptable.GameData = GetGameData;
-        Scriptable.PlayerSettings = GetPlayerMovementSettings;
     }
 
 
@@ -26,7 +24,6 @@ public class ScriptableManager : MonoBehaviour
 
 
     //-------------------------------------------------------------------
-    PlayerMovementSettings GetPlayerMovementSettings() => PlayerMovementSettings;
 
 }
 
@@ -35,5 +32,4 @@ public class ScriptableManager : MonoBehaviour
 public static class Scriptable
 {
     public static Func<GameData> GameData;
-    public static Func<PlayerMovementSettings> PlayerSettings;
 }

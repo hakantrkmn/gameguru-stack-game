@@ -2,12 +2,6 @@ using UnityEngine;
 using System;
 using System.Collections.Generic;
 
-[Serializable]
-public struct TutorialPanels
-{
-    public TutorialTypes panelName;
-    public GameObject panelGameObject;
-}
 
 
 #region Incremental Idle

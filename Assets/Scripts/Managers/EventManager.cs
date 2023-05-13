@@ -4,22 +4,22 @@ using UnityEngine;
 
 public static class EventManager
 {
-    
-    
 
-    #region InputSystem
-    public static Func<Vector2> GetInput;
-    public static Func<Vector2> GetInputDelta;
-    public static Action InputStarted;
-    public static Action InputEnded;
-    public static Func<bool> IsTouching;
-    public static Func<bool> IsPointerOverUI;
-    #endregion
 
-  
-    public static Action<float> StackCubePlaced;
+    public static Action<float,Transform> StackCubePlaced;
+    public static Func<Vector3> GetFinishPosition;
+    public static Action PlayerHitFinish;
+    public static Action<GameStates> ChangeGameState;
+    public static Action ContinueButtonClicked;
+    public static Action RetryButtonClicked;
 
- 
+    public static Action StartWithNewFinish;
+    public static Action PlayerCanContinue;
+
+    public static Action LevelWin;
+    public static Action LevelFail;
+    public static Func<Vector3> GetStackSize;
+
 
 
 }
