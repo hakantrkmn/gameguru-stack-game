@@ -6,8 +6,8 @@ using UnityEngine;
 
 public class FinishManager : MonoBehaviour
 {
+    [HideInInspector]
     public List<Finish> finishes;
-    private int finishIndex;
     public int objectAmountBetweenFinishes;
     private void OnValidate()
     {
@@ -41,12 +41,12 @@ public class FinishManager : MonoBehaviour
 
     private void PlayerHitFinish()
     {
-        if (finishIndex+1>=finishes.Count)
+        if (finishes.Count==0)
             EventManager.LevelWin();
         else
         {
             EventManager.PlayerCanContinue();
-            finishIndex++;
+            finishes.Remove(finishes.First());
         }
             
     }
@@ -59,6 +59,6 @@ public class FinishManager : MonoBehaviour
 
     private Vector3 GetFinishPosition()
     {
-        return finishes[finishIndex].stackPos.position;
+        return finishes.First().stackPos.position;
     }
 }

@@ -11,6 +11,7 @@ public class CameraController : MonoBehaviour
     public GameStates gameState;
 
     #region events
+
     private void OnEnable()
     {
         EventManager.LevelWin += LevelWin;
@@ -20,7 +21,6 @@ public class CameraController : MonoBehaviour
     }
 
 
-
     private void OnDisable()
     {
         EventManager.LevelWin -= LevelWin;
@@ -28,16 +28,25 @@ public class CameraController : MonoBehaviour
         EventManager.ChangeGameState -= ChangeGameState;
         EventManager.PlayerHitFinish -= PlayerHitFinish;
     }
-    
 
     #endregion
-  
+
+
+    private void Start()
+    {
+        var player = GameObject.FindObjectOfType<PlayerController>().transform;
+        gameCam.Follow = player;
+        gameCam.LookAt = player;
+        danceCam.Follow = player;
+        danceCam.LookAt = player;
+    }
+
     private void LevelWin()
     {
         gameCam.Priority = 1;
         danceCam.Priority = 10;
-        
     }
+
     private void ChangeGameState(GameStates obj)
     {
         gameState = obj;
@@ -50,7 +59,6 @@ public class CameraController : MonoBehaviour
         EventManager.ChangeGameState(GameStates.Run);
     }
 
-   
 
     private void PlayerHitFinish()
     {
