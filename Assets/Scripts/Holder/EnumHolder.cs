@@ -1,6 +1,6 @@
 ﻿public enum GameStates
 {
-    Start,
+    Wait,
     Run,
     Dance,
     Fail,

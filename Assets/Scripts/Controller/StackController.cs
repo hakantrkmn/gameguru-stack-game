@@ -11,54 +11,44 @@ public class StackController : MonoBehaviour
     public NewFinishTypes finishType;
     public Vector3 firstStackScale;
     [HideInInspector] public GameStates gameState;
-    public GameObject stackPrefab;
+    [HideInInspector] public GameObject stackPrefab;
     [HideInInspector] public List<StackCube> stackList;
     [HideInInspector] public StackCube currentStackObj;
-
-
-    public Transform nextStackPosition;
+    [HideInInspector]public Transform nextStackPosition;
 
 
     public List<Material> stackMaterials;
 
-    private int materialIndex;
-    private int side = 1;
+    private int _materialIndex;
+    private int _side = 1;
 
     #region events
 
     private void OnEnable()
     {
-        EventManager.GetStackSize += GetStackSize;
-        EventManager.ChangeGameState += ChangeGameState;
+        EventManager.GetStackSize += () => firstStackScale;
+        EventManager.ChangeGameState += states => gameState=states;
         EventManager.ContinueButtonClicked += StartWithNewFinish;
         EventManager.PlayerCanContinue += PlayerCanContinue;
     }
 
     private void OnDisable()
     {
-        EventManager.GetStackSize -= GetStackSize;
-        EventManager.ChangeGameState -= ChangeGameState;
+        EventManager.GetStackSize -= () => firstStackScale;
+        EventManager.ChangeGameState -= states => gameState=states;
         EventManager.ContinueButtonClicked -= StartWithNewFinish;
         EventManager.PlayerCanContinue -= PlayerCanContinue;
     }
 
     #endregion
+    
 
-    private Vector3 GetStackSize()
-    {
-        return firstStackScale;
-    }
-
-    private void ChangeGameState(GameStates obj)
-    {
-        gameState = obj;
-    }
 
     private void StartWithNewFinish() //stackleri finish noktasına taşıyıp ordan oyuna devam etma
     {
-        var obj = Instantiate(stackPrefab, Vector3.zero, quaternion.identity, transform);
-        obj.transform.position = nextStackPosition.position;
-        currentStackObj = obj.GetComponent<StackCube>();
+        var firstStack = Instantiate(stackPrefab, Vector3.zero, quaternion.identity, transform);
+        firstStack.transform.position = nextStackPosition.position;
+        currentStackObj = firstStack.GetComponent<StackCube>();
 
         if (stackList.Count != 0 && finishType == NewFinishTypes.ContinueWithLastScale)
             currentStackObj.transform.localScale = stackList.Last().transform.lossyScale;
@@ -67,44 +57,44 @@ public class StackController : MonoBehaviour
 
         stackList.Add(currentStackObj);
         nextStackPosition.position = currentStackObj.transform.position + new Vector3(0, 0, firstStackScale.z);
-        currentStackObj.SetMaterial(stackMaterials[materialIndex]);
+        currentStackObj.SetMaterial(stackMaterials[_materialIndex]);
 
-        materialIndex++;
-        if (materialIndex >= stackMaterials.Count)
-            materialIndex = 0;
+        SetNewMaterial();
 
         SpawnNextStack();
+    }
+
+    void SetNewMaterial()
+    {
+        _materialIndex++;
+        if (_materialIndex >= stackMaterials.Count)
+            _materialIndex = 0;
     }
 
 
     private void PlayerCanContinue()
     {
         nextStackPosition.position = EventManager.GetFinishPosition() + new Vector3(0, -.5f, firstStackScale.z / 2);
-
         stackList.First().transform.parent = null;
     }
 
     private void Start()
     {
         StartWithNewFinish();
-        EventManager.ChangeGameState(GameStates.Run);
     }
 
     void SpawnNextStack()
     {
-        if (nextStackPosition.position.z + 1 <= EventManager.GetFinishPosition().z)
-        {
-            var obj = Instantiate(stackPrefab, Vector3.zero, quaternion.identity, stackList.Last().transform);
-            obj.transform.position = nextStackPosition.position;
-            currentStackObj = obj.GetComponent<StackCube>();
-            currentStackObj.StartMovement(side);
-            side *= -1;
-            currentStackObj.SetMaterial(stackMaterials[materialIndex]);
-            materialIndex++;
-
-            if (materialIndex >= stackMaterials.Count)
-                materialIndex = 0;
-        }
+        if (!(nextStackPosition.position.z + 1 <= EventManager.GetFinishPosition().z)) return;
+        
+        var obj = Instantiate(stackPrefab, Vector3.zero, quaternion.identity, stackList.Last().transform);
+        obj.transform.position = nextStackPosition.position;
+        currentStackObj = obj.GetComponent<StackCube>();
+        currentStackObj.StartMovement(_side);
+        _side *= -1;
+        currentStackObj.SetMaterial(stackMaterials[_materialIndex]);
+       
+        SetNewMaterial();
     }
 
     void CutStack()
@@ -130,7 +120,11 @@ public class StackController : MonoBehaviour
 
     private void Update()
     {
-        if (Input.GetMouseButtonDown(0) && gameState == GameStates.Run)
-            CutStack();
+        if (gameState==GameStates.Run || gameState == GameStates.Wait)
+        {
+            if (Input.GetMouseButtonDown(0))
+                CutStack();
+        }
+        
     }
 }

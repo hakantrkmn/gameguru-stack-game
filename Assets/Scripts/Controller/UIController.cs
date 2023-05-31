@@ -25,13 +25,11 @@ public class UIController : MonoBehaviour
     private void PlayerCanContinue()
     {
         continueButton.SetActive(true);
-        
     }
 
     private void LevelWin()
     {
         levelWinPanel.SetActive(true);
-        
     }
 
     private void LevelFail()
@@ -43,7 +41,7 @@ public class UIController : MonoBehaviour
     {
         EventManager.LevelFail -= LevelFail;
         EventManager.LevelWin -= LevelWin;
-        EventManager.PlayerCanContinue -=  PlayerCanContinue;
+        EventManager.PlayerCanContinue -= PlayerCanContinue;
         EventManager.ContinueButtonClicked -= ContinueButtonClicked;
     }
 }

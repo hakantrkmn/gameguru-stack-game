@@ -20,6 +20,15 @@ public class PlayerController : MonoBehaviour
                 EventManager.ChangeGameState(GameStates.Fail);
             }
         }
+        else if (gameState==GameStates.Wait)
+        {
+            if (Input.GetMouseButtonDown(0))
+            {
+                forwardMovement.canControl = true;
+                animator.SetBool("run",true);
+                EventManager.ChangeGameState(GameStates.Run);
+            }
+        }
         
     }
 
@@ -50,20 +59,26 @@ public class PlayerController : MonoBehaviour
 
     private void StartWithNewFinish()
     {
+        EventManager.ChangeGameState(GameStates.Wait);
         animator.SetBool("dance",false);
-        forwardMovement.canControl = true;
+        animator.SetBool("run",false);
 
+    }
+
+    void PlayerHitTheEnd(Transform finishTransform)
+    {
+        transform.DOMove(finishTransform.position, .1f);
+        animator.SetBool("dance",true);
+        forwardMovement.canControl = false;
+        EventManager.PlayerHitFinish();
+        EventManager.ChangeGameState(GameStates.Dance);
     }
 
     private void OnCollisionEnter(Collision collision)
     {
         if (collision.transform.GetComponent<Finish>())
         {
-            transform.DOMove(collision.transform.position, .1f);
-            animator.SetBool("dance",true);
-            forwardMovement.canControl = false;
-            EventManager.PlayerHitFinish();
-            EventManager.ChangeGameState(GameStates.Dance);
+            PlayerHitTheEnd(collision.transform);
         }
     }
 }

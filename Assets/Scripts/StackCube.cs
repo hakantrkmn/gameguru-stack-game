@@ -7,18 +7,18 @@ using UnityEngine;
 
 public class StackCube : MonoBehaviour
 {
-    private Sequence movement;
+    private Sequence _movement;
     public float speed;
 
     public void StartMovement(int side)
     {
         transform.localPosition += new Vector3(side * 2, 0, 0);
         
-        movement = DOTween.Sequence();
+        _movement = DOTween.Sequence();
 
-        movement.Append(transform.DOLocalMoveX(-side*2, speed));
-        movement.Append(transform.DOLocalMoveX(side*2, speed));
-        movement.SetLoops(-1, LoopType.Yoyo);
+        _movement.Append(transform.DOLocalMoveX(-side*2, speed));
+        _movement.Append(transform.DOLocalMoveX(side*2, speed));
+        _movement.SetLoops(-1, LoopType.Yoyo);
     }
 
     public void SetMaterial(Material mat)
@@ -28,7 +28,7 @@ public class StackCube : MonoBehaviour
 
     public void StopMovement()
     {
-        movement.Kill();
+        _movement.Kill();
     }
 
     public void CutCube(Vector3 lastStackScale, float correction, GameObject stackPrefab)
@@ -48,6 +48,8 @@ public class StackCube : MonoBehaviour
                     new Vector3(transform.localPosition.x + .5f, 0, transform.localPosition.z);
                 fallObj.GetComponent<StackCube>().SetMaterial(GetComponent<MeshRenderer>().material);
                 fallObj.GetComponent<Rigidbody>().isKinematic = false;
+                fallObj.GetComponent<Rigidbody>().AddForce(new Vector3(fallObj.transform.localPosition.x,.5f,0)*100);
+
                 Destroy(fallObj.gameObject,2);
             }
             else
@@ -63,6 +65,8 @@ public class StackCube : MonoBehaviour
                     new Vector3(transform.localPosition.x - .5f, 0, transform.localPosition.z);
                 fallObj.GetComponent<Rigidbody>().isKinematic = false;
                 fallObj.GetComponent<StackCube>().SetMaterial(GetComponent<MeshRenderer>().material);
+                fallObj.GetComponent<Rigidbody>().AddForce(new Vector3(fallObj.transform.localPosition.x,.5f,0)*100);
+
                 Destroy(fallObj.gameObject,2);
 
             }
