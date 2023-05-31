@@ -8,7 +8,6 @@ using UnityEngine;
 public class StackCube : MonoBehaviour
 {
     private Sequence _movement;
-    public float speed;
 
     public void StartMovement(int side)
     {
@@ -16,9 +15,10 @@ public class StackCube : MonoBehaviour
         
         _movement = DOTween.Sequence();
 
-        _movement.Append(transform.DOLocalMoveX(-side*2, speed));
-        _movement.Append(transform.DOLocalMoveX(side*2, speed));
+        _movement.Append(transform.DOLocalMoveX(-side * 2, Scriptable.GetStackSettings().stackSpeed));
+        _movement.Append(transform.DOLocalMoveX(side * 2, Scriptable.GetStackSettings().stackSpeed));
         _movement.SetLoops(-1, LoopType.Yoyo);
+        
     }
 
     public void SetMaterial(Material mat)

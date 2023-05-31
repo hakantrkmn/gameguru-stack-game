@@ -8,6 +8,11 @@ public class AudioManager : MonoBehaviour
     public AudioSource audioSource;
     public float tolerance;
 
+    private void Start()
+    {
+        tolerance = Scriptable.GetStackSettings().tolerance;
+    }
+
     private void OnEnable()
     {
         EventManager.StackCubePlaced += StackCubePlaced;

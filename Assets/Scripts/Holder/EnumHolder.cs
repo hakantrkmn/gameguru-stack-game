@@ -2,6 +2,7 @@
 {
     Wait,
     Run,
+    StackReachedFinish,
     Dance,
     Fail,
 }

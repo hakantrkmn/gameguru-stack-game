@@ -8,8 +8,8 @@ using UnityEngine;
 
 public class StackController : MonoBehaviour
 {
-    public NewFinishTypes finishType;
-    public Vector3 firstStackScale;
+    public NewFinishTypes finishType; 
+    Vector3 firstStackScale;
     [HideInInspector] public GameStates gameState;
     [HideInInspector] public GameObject stackPrefab;
     [HideInInspector] public List<StackCube> stackList;
@@ -46,6 +46,7 @@ public class StackController : MonoBehaviour
 
     private void StartWithNewFinish() //stackleri finish noktasına taşıyıp ordan oyuna devam etma
     {
+        firstStackScale = Scriptable.GetStackSettings().firstStackScale;
         var firstStack = Instantiate(stackPrefab, Vector3.zero, quaternion.identity, transform);
         firstStack.transform.position = nextStackPosition.position;
         currentStackObj = firstStack.GetComponent<StackCube>();
@@ -85,7 +86,11 @@ public class StackController : MonoBehaviour
 
     void SpawnNextStack()
     {
-        if (!(nextStackPosition.position.z + 1 <= EventManager.GetFinishPosition().z)) return;
+        if (!(nextStackPosition.position.z + 1 <= EventManager.GetFinishPosition().z))
+        {
+            EventManager.ChangeGameState(GameStates.StackReachedFinish);
+            return;
+        }
         
         var obj = Instantiate(stackPrefab, Vector3.zero, quaternion.identity, stackList.Last().transform);
         obj.transform.position = nextStackPosition.position;

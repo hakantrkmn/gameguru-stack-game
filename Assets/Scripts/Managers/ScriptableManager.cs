@@ -7,20 +7,19 @@ using UnityEngine;
 
 public class ScriptableManager : MonoBehaviour
 {
-    [SerializeField] GameData gameData;
+    [SerializeField] StackSettings stackSettings;
 
 
     //-------------------------------------------------------------------
     void Awake()
     {
-        SaveManager.LoadGameData(gameData);
 
-        Scriptable.GameData = GetGameData;
+        Scriptable.GetStackSettings = GetStackSettings;
     }
 
 
     //-------------------------------------------------------------------
-    GameData GetGameData() => gameData;
+    StackSettings GetStackSettings() => stackSettings;
 
 
     //-------------------------------------------------------------------
@@ -31,5 +30,5 @@ public class ScriptableManager : MonoBehaviour
 
 public static class Scriptable
 {
-    public static Func<GameData> GameData;
+    public static Func<StackSettings> GetStackSettings;
 }
